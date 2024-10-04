@@ -29,6 +29,7 @@ class Game:
     # create the all sprites group to allow for batch updates and draw methods
     self.all_sprites = pg.sprite.Group()
     self.all_walls = pg.sprite.Group()
+    self.all_powerups = pg.sprite.Group()
     # instantiating the class to create the player object 
     # self.player = Player(self, 5, 5)
     # self.mob = Mob(self, 100, 100)
@@ -42,14 +43,13 @@ class Game:
       for col, tile in enumerate(tiles):
         print(col*TILESIZE)
         if tile == '1':
-          # Wall(self, col, row)
-          Wall(self, col*TILESIZE, row*TILESIZE)
+          Wall(self, col, row)
         if tile == 'M':
-          # Wall(self, col, row)
-          Mob(self, col*TILESIZE, row*TILESIZE)
+          Mob(self, col, row)
         if tile == 'P':
-          # Wall(self, col, row)
           self.player = Player(self, col, row)
+        if tile == 'U':
+          Powerup(self, col, row)
 
 # this is a method
 # methods are like functions that are part of a class
@@ -75,11 +75,20 @@ class Game:
   def update(self):
     # update all the sprites...and I MEAN ALL OF THEM
     self.all_sprites.update()
+  def draw_text(self, surface, text, size, color, x, y):
+    font_name = pg.font.match_font('arial')
+    font = pg.font.Font(font_name, size)
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x,y)
+    surface.blit(text_surface, text_rect)
 
   # output
   def draw(self):
-    self.screen.fill((0, 0, 0))
+    self.screen.fill(BLACK)
     self.all_sprites.draw(self.screen)
+    self.draw_text(self.screen, "asdfdasfasdf", 24, WHITE, WIDTH/2, HEIGHT/2)
+    self.draw_text(self.screen, str(self.dt), 24, WHITE, WIDTH/30, HEIGHT/30)
     pg.display.flip()
 
 if __name__ == "__main__":
