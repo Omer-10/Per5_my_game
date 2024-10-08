@@ -61,11 +61,13 @@ class Player(Sprite):
         # # else:
         #     print("not working for dir check")
     def collide_with_stuff(self, group, kill):
-        hits = pg.sprite.spritecollide(self,group, kill)
+        hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
             if str(hits[0].__class__.__name__) == "Powerup":
-                self.speed = 100
-                print("I've gotten a Powerup!")
+                self.speed += 20
+                print("I've gotten a powerup!")
+            if str(hits[0].__class__.__name__) == "Coin":
+                print("I got a coin!!!")
 
     def update(self):
         self.get_keys()
@@ -83,8 +85,9 @@ class Player(Sprite):
         self.rect.y = self.y
         self.collide_with_walls('y')
         # teleport the player to the other side of the screen
-        self.collide_with_stuff(self.game.all_powerups,True)
-        
+        self.collide_with_stuff(self.game.all_powerups, True)
+        self.collide_with_stuff(self.game.all_coins, True)
+
 # added Mob - moving objects
 # it is a child class of Sprite
 class Mob(Sprite):
@@ -129,6 +132,17 @@ class Powerup(Sprite):
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image.fill(PINK)
+        self.rect = self.image.get_rect()
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class Coin(Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.all_coins
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(GOLD)
         self.rect = self.image.get_rect()
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE

@@ -17,7 +17,7 @@ class Game:
     pg.mixer.init()
     self.clock = pg.time.Clock()
     self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-    pg.display.set_caption("Chris' Coolest Game Ever...")
+    pg.display.set_caption("Omer's Coolest Game Ever...")
     self.playing = True
   # this is where the game creates the stuff you see and hear
   def load_data(self):
@@ -30,6 +30,7 @@ class Game:
     self.all_sprites = pg.sprite.Group()
     self.all_walls = pg.sprite.Group()
     self.all_powerups = pg.sprite.Group()
+    self.all_coins = pg.sprite.Group()
     # instantiating the class to create the player object 
     # self.player = Player(self, 5, 5)
     # self.mob = Mob(self, 100, 100)
@@ -50,6 +51,8 @@ class Game:
           self.player = Player(self, col, row)
         if tile == 'U':
           Powerup(self, col, row)
+        if tile == 'C':
+          Coin(self, col, row)
 
 # this is a method
 # methods are like functions that are part of a class
@@ -88,7 +91,7 @@ class Game:
     self.screen.fill(BLACK)
     self.all_sprites.draw(self.screen)
     self.draw_text(self.screen, "asdfdasfasdf", 24, WHITE, WIDTH/2, HEIGHT/2)
-    self.draw_text(self.screen, str(self.dt), 24, WHITE, WIDTH/30, HEIGHT/30)
+    self.draw_text(self.screen, str(self.dt*1000), 24, WHITE, WIDTH/30, HEIGHT/30)
     pg.display.flip()
 
 if __name__ == "__main__":
