@@ -91,20 +91,6 @@ class Player(Sprite):
         self.collide_with_stuff(self.game.all_powerups, True)
         self.collide_with_stuff(self.game.all_coins, True)
 
-# added Mob - moving objects
-# it is a child class of Sprite
-class Mob(Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.all_sprites
-        Sprite.__init__(self, self.groups)
-        self.game = game
-        self.image = pg.Surface((32, 32))
-        self.image.fill(GREEN)
-        self.rect = self.image.get_rect()
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-        self.speed = 25
-
     def update(self):
         self.rect.x += self.speed
         # self.rect.y += self.speed

@@ -47,13 +47,6 @@ class Game:
     self.all_powerups = pg.sprite.Group()
     self.all_coins = pg.sprite.Group()
     # instantiating the class to create the player object 
-    # self.player = Player(self, 5, 5)
-    # self.mob = Mob(self, 100, 100)
-    # self.wall = Wall(self, WIDTH//2, HEIGHT//2)
-    # # instantiates wall and mob objects
-    # for i in range(12):
-    #   Wall(self, TILESIZE*i, HEIGHT/2)
-    #   Mob(self, TILESIZE*i, TILESIZE*i)
     for row, tiles in enumerate(self.map.data):
       print(row*TILESIZE)
       for col, tile in enumerate(tiles):
@@ -61,8 +54,6 @@ class Game:
         if tile == '1':
           Wall(self, col, row)
         if tile == 'M':
-          Mob(self, col, row)
-        if tile == 'P':
           self.player = Player(self, col, row)
         if tile == 'U':
           Powerup(self, col, row)
