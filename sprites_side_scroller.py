@@ -30,7 +30,7 @@ class Player(Sprite):
         self.speed = 5
         # self.vx, self.vy = 0, 0
         self.coin_count = 0
-        self.jump_power = 20
+        self.jump_power = 10
         self.jumping = False
     def get_keys(self):
         keys = pg.key.get_pressed()
@@ -99,7 +99,7 @@ class Player(Sprite):
         self.get_keys()
         # self.x += self.vx * self.game.dt
         # self.y += self.vy * self.game.dt
-        self.acc.x += self.vel.x * FRICTION
+        #self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
 
         if abs(self.vel.x) < 0.1:
@@ -153,7 +153,7 @@ class Wall(Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
-class Powerup(Sprite):
+'''class Powerup(Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.all_powerups
         Sprite.__init__(self, self.groups)
@@ -173,7 +173,7 @@ class Coin(Sprite):
         self.image.fill(GOLD)
         self.rect = self.image.get_rect()
         self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
+        self.rect.y = y * TILESIZE'''
 
 
             
