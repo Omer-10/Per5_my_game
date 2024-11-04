@@ -7,19 +7,27 @@ from settings import *
 from sprites_side_scroller import *
 from tilemap import *
 from os import path
+from random import randint
 # we are editing this file after installing git
 
 '''
 Elevator pitch: I want to create a game that follows an apprentice mage from the bottom of a tower to the top, leveling up as he climbs to the top to defeat the evil wizard...
 
-GOALS: to ascend the tower
-RULES: jump, cast spells, shields attack, cannot move up until puzzles and enemies defeated 
-FEEDBACK: Damage meter, spells interactions 
-FREEDOM: x and y movement with jump, platforming
+GOALS: Sidescroller Parkour Game
+RULES: You move forward avoiding spikes and collecting coins along the way until the end
+FEEDBACK: Damage meter, powerup interactions 
+FREEDOM: Only jump, Sidescrolling
 
-What's the sentence: Shoot iceblock with fireball melt iceblock to advance...
+What's the sentence: Avoid the obstacles to acheive Victory...
 
-Alpha goal: to create a sidescroller setup gravity, platform collision, jump
+Alpha goal: to create a sidescroller setup, Spike collision, jump
+
+'''
+
+'''
+Sources:
+https://www.youtube.com/watch?v=atoGQ9o0ooI - Spike
+https://bcpsj-my.sharepoint.com/personal/ccozort_bcp_org/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fccozort%5Fbcp%5Forg%2FDocuments%2FDocuments%2F000%5FCS%5Fprinciples%2F2024%5F2025%5FFall%2Fclass%5Fcode%2Fside%5Fscroller - Sidescroller
 
 '''
 
@@ -44,22 +52,16 @@ class Game:
     # create the all sprites group to allow for batch updates and draw methods
     self.all_sprites = pg.sprite.Group()
     self.all_walls = pg.sprite.Group()
-    self.all_powerups = pg.sprite.Group()
-    self.all_coins = pg.sprite.Group()
-    # instantiating the class to create the player object 
-    # self.player = Player(self, 5, 5)
-    # self.mob = Mob(self, 100, 100)
-    # self.wall = Wall(self, WIDTH//2, HEIGHT//2)
-    # # instantiates wall and mob objects
-    # for i in range(12):
-    #   Wall(self, TILESIZE*i, HEIGHT/2)
-    #   Mob(self, TILESIZE*i, TILESIZE*i)
+    self.all_spikes = pg.sprite.Group()
+    # self.all_coins = pg.sprite.Group()
     for row, tiles in enumerate(self.map.data):
       print(row*TILESIZE)
       for col, tile in enumerate(tiles):
         print(col*TILESIZE)
         if tile == '1':
           Wall(self, col, row)
+        if tile == 'S':
+          Spike(self, col, row)
         if tile == 'P':
           self.player = Player(self, col, row)
         
@@ -101,6 +103,24 @@ class Game:
     self.screen.fill(BLACK)
     self.all_sprites.draw(self.screen)
     self.draw_text(self.screen, str(self.dt*1000), 24, WHITE, WIDTH/30, HEIGHT/30)
+    pg.display.flip()
+
+  def update(self):
+    self.all_sprites.update()
+        # output
+  def draw_text(self, surface, text, size, color, x, y):
+    font_name = pg.font.match_font('arial')
+    font = pg.font.Font(font_name, size)
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x,y)
+    surface.blit(text_surface, text_rect)
+
+  def draw(self):
+    self.screen.fill(WHITE)
+    self.all_sprites.draw(self.screen)
+    self.draw_text(self.screen, str(pg.time.get_ticks()), 24, WHITE, WIDTH/30, HEIGHT/30)
+    # self.draw_text(self.screen, "Coins collected: " + str(self.player.coins), 24, BLACK, WIDTH/2, HEIGHT/24)
     pg.display.flip()
 
 if __name__ == "__main__":
