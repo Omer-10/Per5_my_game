@@ -117,9 +117,9 @@ class Game:
     surface.blit(text_surface, text_rect)
 
   def draw(self):
-    self.screen.fill(WHITE)
+    self.screen.fill(BLACK)
     self.all_sprites.draw(self.screen)
-    self.draw_text(self.screen, str(pg.time.get_ticks()), 24, WHITE, WIDTH/30, HEIGHT/30)
+    self.draw_text(self.screen, str(pg.time.get_ticks()), 24, BLACK, WIDTH/30, HEIGHT/30)
     # self.draw_text(self.screen, "Coins collected: " + str(self.player.coins), 24, BLACK, WIDTH/2, HEIGHT/24)
     pg.display.flip()
 
