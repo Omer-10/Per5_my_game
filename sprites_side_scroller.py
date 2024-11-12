@@ -9,9 +9,8 @@ import sys
 vec = pg.math.Vector2
 
 
-
 # create the player class with a superclass of Sprite
-class Player(Sprite):
+'''class Player(Sprite):
     # this initializes the properties of the player class including the x y location, and the game parameter so that the the player can interact logically with
     # other elements in the game...
     def __init__(self, game, x, y):
@@ -19,19 +18,19 @@ class Player(Sprite):
         Sprite.__init__(self, self.groups)
         self.game = game
         self.image = pg.Surface((32, 32))
-        self.image.fill((255, 0, 0))
+        self.image.fill(RED)
         self.rect = self.image.get_rect()
-        # self.rect.x = x
-        # self.rect.y = y
-        # self.x = x * TILESIZE
-        # self.y = y * TILESIZE
+        self.rect.x = x
+        self.rect.y = y
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
         self.pos = vec(x*TILESIZE, y*TILESIZE)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.speed = 5
-        # self.vx, self.vy = 0, 0
+        self.vx, self.vy = 0, 0
         self.coin_count = 0
-        self.jump_power = 10
+        self.jump_power = 15
         self.jumping = False
     def get_keys(self):
         keys = pg.key.get_pressed()
@@ -195,7 +194,7 @@ class Player(Sprite):
             self.rect.y = 0
 
         if self.rect.colliderect(self.game.player):
-            self.speed *= -1
+            self.speed *= -1'''
 
 
 class Wall(Sprite):
@@ -211,15 +210,15 @@ class Wall(Sprite):
 
 class Spike(Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.all_spikes
-        Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(BLUE)
+        self.groups = game.all_sprites, game.all_walls
+        Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((32, 32))
         self.rect = self.image.get_rect()
+        self.image.fill(GREEN)
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
-'''
+
 class Coin(Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.all_coins
@@ -229,5 +228,5 @@ class Coin(Sprite):
         self.image.fill(GOLD)
         self.rect = self.image.get_rect()
         self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE'''
+        self.rect.y = y * TILESIZE
 

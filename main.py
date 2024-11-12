@@ -3,7 +3,7 @@
 # this is where we import libraries and modules
 import pygame as pg
 from settings import *
-# from sprites import *
+from sprites import *
 from sprites_side_scroller import *
 from tilemap import *
 from os import path
@@ -53,7 +53,7 @@ class Game:
     self.all_sprites = pg.sprite.Group()
     self.all_walls = pg.sprite.Group()
     self.all_spikes = pg.sprite.Group()
-    # self.all_coins = pg.sprite.Group()
+    self.all_coins = pg.sprite.Group()
     for row, tiles in enumerate(self.map.data):
       print(row*TILESIZE)
       for col, tile in enumerate(tiles):
@@ -62,8 +62,12 @@ class Game:
           Wall(self, col, row)
         if tile == 'S':
           Spike(self, col, row)
-        if tile == 'P':
-          self.player = Player(self, col, row)
+        if tile == 'C':
+          Coin(self, col, row)
+        if tile == 'M':
+          Mob(self, col, row)
+        # if tile == 'P':
+          # self.player = Player(self, col, row)
         
 
 # this is a method

@@ -7,23 +7,22 @@ import random
 
 vec = pg.math.Vector2
 
-class Player(Sprite):
+'''class Player(Sprite):
     def __init__(self, game, x, y):
         self.game = game
         self.groups = game.all_sprites
         Sprite.__init__(self, self.groups)
-        self.image = pg.image.load(self.game.player_img)
-        # self.image = pg.Surface((32, 32))
+        self.image = pg.Surface((32, 32))
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
-        # self.image.fill(RED)
-        # self.rect.x = x
-        # self.rect.y = y
+        self.image.fill(GREEN)
+        self.rect.x = x
+        self.rect.y = y
         self.pos = vec(x*TILESIZE, y*TILESIZE, self)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.speed = 5
-        # self.vx, self.vy = 0, 0
+        self.vx, self.vy = 0, 0
         self.coins = 0
         self.jump_power = 15
         self.jumping = False
@@ -31,8 +30,8 @@ class Player(Sprite):
         keys = pg.key.get_pressed()
         # if keys[pg.K_w]:
         #     self.vy -= self.speed
-        if keys[pg.K_a]:
-            self.acc.x = -self.speed
+        # if keys[pg.K_a]:
+        #    self.acc.x = -self.speed
         # if keys[pg.K_s]:
         #     self.vy += self.speed
         if keys[pg.K_d]:
@@ -46,7 +45,7 @@ class Player(Sprite):
             if hits:
                 if self.vel.x > 0:
                     self.pos.x = hits[0].rect.left - TILESIZE
-                    # self.x = hits[0].rect.left - self.rect.width
+                    self.x = hits[0].rect.left - self.rect.width
                 if self.vel.x < 0:
                     self.pos.x = hits[0].rect.right
                 self.vel.x = 0
@@ -57,7 +56,7 @@ class Player(Sprite):
                 if self.vel.y > 0:
                     self.pos.y = hits[0].rect.top - TILESIZE
                     self.vel.y = 0
-                    # self.y = hits[0].rect.top - self.rect.height
+                    self.y = hits[0].rect.top - self.rect.height
                 if self.vel.y < 0:
                     self.pos.y = hits[0].rect.bottom
                 self.vel.y = 0
@@ -82,8 +81,8 @@ class Player(Sprite):
     def update(self):
         self.acc = vec(0, GRAVITY)
         self.get_keys()
-        # self.x += self.vx * self.game.dt
-        # self.y += self.vy * self.game.dt
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
         # reverse order to fix collision issues
         self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
@@ -98,7 +97,7 @@ class Player(Sprite):
         self.collide_with_walls('x')
         
         self.rect.y = self.pos.y
-        self.collide_with_walls('y')
+        self.collide_with_walls('y')'''
 
 
 class Mob(Sprite):
@@ -108,7 +107,7 @@ class Mob(Sprite):
         Sprite.__init__(self, self.groups)
         self.image = pg.Surface((32, 32))
         self.rect = self.image.get_rect()
-        self.image.fill(GREEN)
+        self.image.fill(RED)
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
         self.speed = 10
@@ -131,7 +130,7 @@ class Mob(Sprite):
         # elif self.rect.colliderect(self.game.player):
         #     self.speed *= -1
         # elif self.rect.colliderect(self):
-        #     self.speed *= -1
+        #     self.speed *= -1'''
 
    
         # then it will move towards the other side of the screen
@@ -167,7 +166,6 @@ class Spike(Sprite):
         self.game = game
         self.groups = game.all_sprites, game.all_walls
         Sprite.__init__(self, self.groups)
-        self.image = pg.image.load(self.game.brick_img)
         self.image = pg.Surface((32, 32))
         self.rect = self.image.get_rect()
         self.image.fill(GREEN)
