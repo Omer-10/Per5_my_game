@@ -66,8 +66,7 @@ class Game:
           Coin(self, col, row)
         if tile == 'M':
           Mob(self, col, row)
-        # if tile == 'P':
-          # self.player = Player(self, col, row)
+
         
 
 # this is a method
@@ -124,7 +123,6 @@ class Game:
     self.screen.fill(BLACK)
     self.all_sprites.draw(self.screen)
     self.draw_text(self.screen, str(pg.time.get_ticks()), 24, BLACK, WIDTH/30, HEIGHT/30)
-    # self.draw_text(self.screen, "Coins collected: " + str(self.player.coins), 24, BLACK, WIDTH/2, HEIGHT/24)
     pg.display.flip()
 
 if __name__ == "__main__":
