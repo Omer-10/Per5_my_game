@@ -119,12 +119,7 @@ class Game:
     text_rect.midtop = (x,y)
     surface.blit(text_surface, text_rect)
 
-  def draw(self):
-    self.screen.fill(BLACK)
-    self.all_sprites.draw(self.screen)
-    self.draw_text(self.screen, str(pg.time.get_ticks()), 24, BLACK, WIDTH/30, HEIGHT/30)
-    pg.display.flip()
-
+ 
 if __name__ == "__main__":
   # instantiate
   print("main is running...")

@@ -5,6 +5,7 @@ from pygame.sprite import Sprite
 from settings import *
 from random import randint
 import sys
+import random
 
 vec = pg.math.Vector2
 
@@ -13,60 +14,105 @@ vec = pg.math.Vector2
 
 class Mob(Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.all_mobs
-        Sprite.__init__(self, self.groups)
         self.game = game
+        self.groups = game.all_sprites
+        Sprite.__init__(self, self.groups)
         self.image = pg.Surface((32, 32))
-        self.image.fill(GREEN)
         self.rect = self.image.get_rect()
+        self.image.fill(RED)
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
-        self.speed = 0
-
+        self.speed = 10
+        self.category = random.choice([0,1])
+    def update(self):
+     
+        # moving towards the side of the screen
+        self.rect.x += self.speed
+        
+        hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
+        # when it hits the side of the screen, it will move down
+        # if hits:
+            # print("off the screen...")
+            # self.speed *= -1
+            # self.rect.y += 32
+        if self.rect.right > WIDTH or self.rect.left < 0:
+            # print("off the screen...")
+            self.speed *= -1
+            self.rect.y += 32
+    
     def __init__(self, game, x, y):
         self.groups = game.all_sprites
         Sprite.__init__(self, self.groups)
         self.game = game
-        # self.image = pg.Surface((32, 32))
-        self.image = self.game.player_img
-        self.image.set_colorkey(BLACK)
-        # self.image.fill(RED)
+        self.image = pg.Surface((32, 32))
+        self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect()
+        # self.rect.x = x
+        # self.rect.y = y
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.speed = 20
+        self.vx, self.vy = 0, 0
+        self.coin_count = 0
+    
+    '''def collide_with_walls(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
+            if hits:
+                if self.vx > 0:
+                    self.x = hits[0].rect.left - TILESIZE
+                if self.vx < 0:
+                    self.x = hits[0].rect.right
+                self.vx = 0
+                self.rect.x = self.x
+            #     print("Collided on x axis")
+            # else:
+            #     print("not working...for hits")
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
+            if hits:
+                if self.vy > 0:
+                    self.y = hits[0].rect.top - TILESIZE
+                if self.vy < 0:
+                    self.y = hits[0].rect.bottom
+                self.vy = 0
+                self.rect.y = self.y
+                # print("Collided on x axis")
+        #     else:
+        #         print("not working...for hits")
+        # # else:
+        #     print("not working for dir check")
+
+    def update(self):
+        self.get_keys()
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+
+        if self.rect.x > WIDTH:
+            self.x = 0
+        elif self.rect.x < 0:
+            self.x = WIDTH - TILESIZE
+
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+
+        self.rect.y = self.y
+        self.collide_with_walls('y')'''
+
+    def __init__(self, game, x, y):
         self.pos = vec(x*TILESIZE, y*TILESIZE)
-        self.vel = vec(0,0)
-        self.acc = vec(0,0)
+        self.vel = vec(20,20)
+        self.acc = vec(10,10)
         self.speed = 3
         self.coin_count = 0
         self.jump_power = 10
         self.jumping = False
-        self.climbing = False
-        self.cd = Cooldown()
-        self.mouse_pos = (0,0)
     def get_keys(self):
         keys = pg.key.get_pressed()
-        if keys[pg.K_e]:
-            self.shoot()
-        if keys[pg.K_w]:
-            if self.climbing:
-                self.vel.y -= 1
-        if keys[pg.K_a]:
-            self.vel.x -= self.speed
-        if keys[pg.K_d]:
-            self.vel.x += self.speed
         if keys[pg.K_SPACE]:
             self.jump()
-        if pg.mouse.get_pressed()[0]:
-            self.mouse_pos = pg.mouse.get_pos()
-            self.shoot()
-    def shoot(self):
-        self.cd.event_time = floor(pg.time.get_ticks()/1000)
-        if self.cd.delta > .01:
-            # print('trying to create projectile')
-            p = Projectile(self.game, self.rect.x, self.rect.y)
-            # print(p.rect.x)
-            # print(p.rect.y)
 
-    def jump(self):
+    '''def jump(self):
         # print("im trying to jump")
         print(self.vel.y)
         self.rect.y += 2
@@ -106,54 +152,7 @@ class Mob(Sprite):
         #     else:
         #         print("not working...for hits")
         # # else:
-        #     print("not working for dir check")
-    def collide_with_ladders(self):
-        self.rect.y -= 16
-        hits = pg.sprite.spritecollide(self, self.game.all_ladders, False)
-        self.rect.y += 16
-        if hits:
-            self.climbing = True
-            self.acc = (0,0)
-        else:
-            self.climbing = False
-    def collide_with_stuff(self, group, kill):
-        hits = pg.sprite.spritecollide(self, group, kill)
-    def update(self):
-        self.cd.ticking()
-        self.acc = vec(0, GRAVITY)
-        self.get_keys()
-        # self.x += self.vx * self.game.dt
-        # self.y += self.vy * self.game.dt
-        self.acc.x += self.vel.x * FRICTION
-        self.vel += self.acc
-
-        if abs(self.vel.x) < 0.1:
-            self.vel.x = 0
-
-        self.pos += self.vel + 0.5 * self.acc
-
-        self.rect.x = self.pos.x
-        self.collide_with_walls('x')
-
-        self.rect.y = self.pos.y
-        self.collide_with_walls('y')
-
-# added Mob - moving objects
-# it is a child class of Sprite
-
-
-    def update(self):
-        pass
-        self.rect.x += self.speed
-        # self.rect.y += self.speed
-        if self.rect.x > WIDTH or self.rect.x < 0:
-            self.speed *= -1
-            self.rect.y += 32
-        if self.rect.y > HEIGHT:
-            self.rect.y = 0
-
-        if self.rect.colliderect(self.game.player):
-            self.speed *= -1
+        #     print("not working for dir check")'''
 
 class Wall(Sprite):
     def __init__(self, game, x, y):

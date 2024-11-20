@@ -49,22 +49,7 @@ class Mob(Sprite):
         self.speed = 20
         self.vx, self.vy = 0, 0
         self.coin_count = 0
-    def get_keys(self):
-        keys = pg.key.get_pressed()
-        if keys[pg.K_w]:
-            self.vy -= self.speed
-            # print(self.vy)
-        if keys[pg.K_a]:
-            self.vx -= self.speed
-        if keys[pg.K_s]:
-            self.vy += self.speed
-        if keys[pg.K_d]:
-            self.vx += self.speed
-        if keys[pg.K_r]:
-            self.x = WIDTH/2
-            self.y = HEIGHT/2
-            print("respawn")
-
+    
     def collide_with_walls(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
@@ -94,7 +79,7 @@ class Mob(Sprite):
         #     print("not working for dir check")
 
     def update(self):
-        self.get_keys()
+        # self.get_keys()
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
 
