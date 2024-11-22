@@ -64,8 +64,8 @@ class Game:
           Spike(self, col, row)
         if tile == 'C':
           Coin(self, col, row)
-        if tile == 'M':
-          Mob(self, col, row)
+        if tile == 'P':
+          Player(self, col, row)
 
         
 

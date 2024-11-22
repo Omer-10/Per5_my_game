@@ -7,7 +7,7 @@ import random
 
 vec = pg.math.Vector2
 
-class Mob(Sprite):
+class Player(Sprite):
     def __init__(self, game, x, y):
         self.game = game
         self.groups = game.all_sprites
@@ -19,7 +19,8 @@ class Mob(Sprite):
         self.rect.y = y * TILESIZE
         self.speed = 10
         self.category = random.choice([0,1])
-    def update(self):
+    
+    '''def update(self):
      
         # moving towards the side of the screen
         self.rect.x += self.speed
@@ -99,7 +100,7 @@ class Mob(Sprite):
    
         # then it will move towards the other side of the screen
         # if it gets to the bottom, then it move to the top of the screen
-        # (display logic in the terminal)
+        # (display logic in the terminal)'''
 
 class Wall(Sprite):
     def __init__(self, game, x, y):
