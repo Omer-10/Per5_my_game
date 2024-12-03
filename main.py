@@ -11,7 +11,7 @@ from random import randint
 # we are editing this file after installing git
 
 '''
-Elevator pitch: I want to create a game that follows an apprentice mage from the bottom of a tower to the top, leveling up as he climbs to the top to defeat the evil wizard...
+Elevator pitch: I want to create a game that replicates the original Game Geometry Dash
 
 GOALS: Sidescroller Parkour Game
 RULES: You move forward avoiding spikes and collecting coins along the way until the end
@@ -26,8 +26,19 @@ Alpha goal: to create a sidescroller setup, Spike collision, jump
 
 '''
 Sources:
-https://www.youtube.com/watch?v=atoGQ9o0ooI - Spike
-https://bcpsj-my.sharepoint.com/personal/ccozort_bcp_org/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fccozort%5Fbcp%5Forg%2FDocuments%2FDocuments%2F000%5FCS%5Fprinciples%2F2024%5F2025%5FFall%2Fclass%5Fcode%2Fside%5Fscroller - Sidescroller
+Spike - https://www.youtube.com/watch?v=atoGQ9o0ooI
+Side Scroller - https://bcpsj-my.sharepoint.com/personal/ccozort_bcp_org/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fccozort%5Fbcp%5Forg%2FDocuments%2FDocuments%2F000%5FCS%5Fprinciples%2F2024%5F2025%5FFall%2Fclass%5Fcode%2Fside%5Fscroller
+Collision Detection - https://www.geeksforgeeks.org/collision-detection-in-pygame/
+https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+Player Movement and Mechanics - https://www.techwithtim.net/tutorials/game-development-with-python/pygame-tutorial/pygame-tutorial-movement
+https://www.geeksforgeeks.org/how-to-move-your-game-character-around-in-pygame/
+Screen Movement, Side Scroller - https://m.youtube.com/watch?v=u7LPRqrzry8&t=84s
+https://m.youtube.com/watch?v=XmSv2V69Y7A&t=58s
+https://www.geeksforgeeks.org/creating-a-scrolling-background-in-pygame/
+https://www.tutorialspoint.com/pygame/pygame_using_camera_module.htm
+https://www.tutorialspoint.com/pygame/pygame_moving_image.htm
+
+
 
 '''
 
