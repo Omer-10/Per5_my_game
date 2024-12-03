@@ -8,39 +8,14 @@ import random
 vec = pg.math.Vector2
 
 class Player(Sprite):
-    def __init__(self, game, x, y):
-        self.game = game
-        self.groups = game.all_sprites
-        Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((32, 32))
-        self.rect = self.image.get_rect()
-        self.image.fill(RED)
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-        self.speed = 10
-        self.category = random.choice([0,1])
-    
-    '''def update(self):
-     
-        # moving towards the side of the screen
-        self.rect.x += self.speed
-        
-        hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
-        # when it hits the side of the screen, it will move down
-        # if hits:
-            # print("off the screen...")
-            # self.speed *= -1
-            # self.rect.y += 32
-        if self.rect.right > WIDTH or self.rect.left < 0:
-            # print("off the screen...")
-            self.speed *= -1
-            self.rect.y += 32
-    
+    # this initializes the properties of the player class including the x y location, and the game parameter so that the the player can interact logically with
+    # other elements in the game...
     def __init__(self, game, x, y):
         self.groups = game.all_sprites
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((32, 32))
+        self.load_images()
+        self.image = self.standing_image
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect()
         # self.rect.x = x
@@ -50,7 +25,23 @@ class Player(Sprite):
         self.speed = 20
         self.vx, self.vy = 0, 0
         self.coin_count = 0
-    
+    def load_images(self):
+        self.standing_image = self.spritesheet.get_image(0,0,32,32)
+    def get_keys(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_w]:
+            self.vy -= self.speed
+            # print(self.vy)
+        if keys[pg.K_a]:
+            self.vx -= self.speed
+        if keys[pg.K_s]:
+            self.vy += self.speed
+        if keys[pg.K_d]:
+            self.vx += self.speed
+        if keys[pg.K_r]:
+            self.x = WIDTH/2
+            self.y = HEIGHT/2
+            print("respawn")
     def collide_with_walls(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
@@ -78,9 +69,20 @@ class Player(Sprite):
         #         print("not working...for hits")
         # # else:
         #     print("not working for dir check")
+    def collide_with_stuff(self, group, kill):
+        hits = pg.sprite.spritecollide(self, group, kill)
+        if hits:
+            if str(hits[0].__class__.__name__) == "Powerup":
+                self.speed += 20
+                # print("I've gotten a powerup!")
+            if str(hits[0].__class__.__name__) == "Coin":
+                # print("I got a coin!!!")
+                self.coin_count += 1
+            if str(hits[0].__class__.__name__) == "Portal":
+                self.game.load_level("level2.txt")
 
     def update(self):
-        # self.get_keys()
+        self.get_keys()
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
 
@@ -96,11 +98,9 @@ class Player(Sprite):
         self.collide_with_walls('y')
         
         # teleport the player to the other side of the screen
-        # self.collide_with_stuff(self.game.all_portals, False)
-   
-        # then it will move towards the other side of the screen
-        # if it gets to the bottom, then it move to the top of the screen
-        # (display logic in the terminal)'''
+        self.collide_with_stuff(self.game.all_powerups, True)
+        self.collide_with_stuff(self.game.all_coins, True)
+        self.collide_with_stuff(self.game.all_portals, False)
 
 class Wall(Sprite):
     def __init__(self, game, x, y):

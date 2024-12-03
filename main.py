@@ -33,98 +33,105 @@ https://bcpsj-my.sharepoint.com/personal/ccozort_bcp_org/_layouts/15/onedrive.as
 
 # create a game class that carries all the properties of the game and methods
 class Game:
-  # initializes all the things we need to run the game...includes the game clock which can set the FPS
-  def __init__(self):
-    pg.init()
-    # sound mixer...
-    pg.mixer.init()
-    self.clock = pg.time.Clock()
-    self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-    pg.display.set_caption("Omer's Coolest Game Ever...")
-    self.playing = True
-  # this is where the game creates the stuff you see and hear
-  def load_data(self):
-    self.game_folder = path.dirname(__file__)
-    self.map = Map(path.join(self.game_folder, 'level1.txt'))
-  def new(self):
-    self.load_data()
-    print(self.map.data)
-    # create the all sprites group to allow for batch updates and draw methods
-    self.all_sprites = pg.sprite.Group()
-    self.all_walls = pg.sprite.Group()
-    self.all_spikes = pg.sprite.Group()
-    self.all_coins = pg.sprite.Group()
-    for row, tiles in enumerate(self.map.data):
-      print(row*TILESIZE)
-      for col, tile in enumerate(tiles):
-        print(col*TILESIZE)
-        if tile == '1':
-          Wall(self, col, row)
-        if tile == 'S':
-          Spike(self, col, row)
-        if tile == 'C':
-          Coin(self, col, row)
-        if tile == 'P':
-          Player(self, col, row)
+    def __init__(self):
+        pg.init()
+        pg.mixer.init()
+        self.clock = pg.time.Clock()
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        pg.display.set_caption("Omer's Coolest Game Ever...")
+        self.playing = True
+        self.game_over = False  # Track game over state
+        self.camera_x = 0  # Initialize the camera offset
+    
+    def load_spikes(self):
+        # Sample code to create spikes. You can replace it with your own logic.
+        spike_image = pg.Surface((32, 32))  # Example surface for spike
+        spike_image.fill((0, 255, 0))  # Green spike
+        for _ in range(5):  # Create 5 spikes at random positions
+            spike = Spike(self, random.randint(0, 800), random.randint(0, 600))  # Implement the Spike class
+            self.all_spikes.add(spike)
 
-        
+    def run(self):
+        while self.playing:  # Main game loop
+            self.handle_events()
+            self.all_sprites.update()  # Call the update method for all sprites (including player)
+            self.screen.fill((255, 255, 255))  # Fill the screen with white
+            self.all_sprites.draw(self.screen)  # Draw all sprites
+            pg.display.flip()  # Refresh the display
+            self.clock.tick(60)  # Limit frame rate to 60 FPS
 
-# this is a method
-# methods are like functions that are part of a class
-# the run method runs the game loop
-  def run(self):
-    while self.playing:
-      self.dt = self.clock.tick(FPS) / 1000
-      # input
-      self.events()
-      # process
-      self.update()
-      # output
-      self.draw()
+    def handle_events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.playing = False  # Exit the game if the window is closed
 
-    pg.quit()
-  # input
-  def events(self):
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-          self.playing = False
-  # process
-  # this is where the game updates the game state
-  def update(self):
-    # update all the sprites...and I MEAN ALL OF THEM
-    self.all_sprites.update()
-  def draw_text(self, surface, text, size, color, x, y):
-    font_name = pg.font.match_font('arial')
-    font = pg.font.Font(font_name, size)
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    text_rect.midtop = (x,y)
-    surface.blit(text_surface, text_rect)
+    def load_data(self):
+        self.game_folder = path.dirname(__file__)
+        self.map = Map(path.join(self.game_folder, 'level1.txt'))  # Load the level data
 
-  # output
-  def draw(self):
-    self.screen.fill(BLACK)
-    self.all_sprites.draw(self.screen)
-    self.draw_text(self.screen, str(self.dt*1000), 24, WHITE, WIDTH/30, HEIGHT/30)
-    pg.display.flip()
+    def new(self):
+        self.load_data()
+        self.all_sprites = pg.sprite.Group()
+        self.all_walls = pg.sprite.Group()
+        self.all_spikes = pg.sprite.Group()
+        self.all_coins = pg.sprite.Group()
 
-  def update(self):
-    self.all_sprites.update()
-        # output
-  def draw_text(self, surface, text, size, color, x, y):
-    font_name = pg.font.match_font('arial')
-    font = pg.font.Font(font_name, size)
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    text_rect.midtop = (x,y)
-    surface.blit(text_surface, text_rect)
+        for row, tiles in enumerate(self.map.data):
+            for col, tile in enumerate(tiles):
+                if tile == '1':  # Wall
+                    Wall(self, col, row)
+                if tile == 'S':  # Spike
+                    Spike(self, col, row)
+                if tile == 'C':  # Coin
+                    Coin(self, col, row)
+                if tile == 'P':  # Player starting position
+                    self.player = Player(self, col, row)
 
- 
+    def run(self):
+        while self.playing:
+            self.dt = self.clock.tick(FPS) / 1000
+            self.events()
+            if not self.game_over:
+                self.update()
+
+            else:
+                self.display_game_over()  # Show game over screen
+            self.draw()
+        pg.quit()
+
+    def events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.playing = False
+
+    def update(self):
+        self.all_sprites.update()  # Update player and other sprites
+        # Update camera x based on player's position to ensure smooth scrolling
+        self.camera_x = self.player.rect.centerx - WIDTH // 2
+
+    def draw(self):
+        self.screen.fill(BLACK)  # Clear the screen
+        # Draw all sprites considering the camera offset
+        for sprite in self.all_sprites:
+            self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y))
+        pg.display.flip()  # Update the display
+
+    def display_game_over(self):
+        # Display game over screen
+        font = pg.font.SysFont('Arial', 50)
+        text = font.render('Game Over', True, RED)
+        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        self.screen.blit(text, text_rect)
+        pg.display.flip()
+        pg.time.wait(2000)  # Wait for 2 seconds before quitting
+        self.playing = False  # End the game
+
 if __name__ == "__main__":
-  # instantiate
-  print("main is running...")
-  g = Game()
-  print("main is running...")
-  g.new()
-  g.run()
-  
+    g = Game()
+    g.new()
+    g.run()
+
+    #not moving forward after certain point in game
+    #when jumping player would get stuck in ground or get flung back
+    #hitting wall made player move backward
+    #collide with spike wasnt working but i put in spike class instead of player
