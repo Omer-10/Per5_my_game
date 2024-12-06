@@ -55,10 +55,9 @@ class Game:
         self.camera_x = 0  # Initialize the camera offset
     
     def load_spikes(self):
-        # Sample code to create spikes. You can replace it with your own logic.
-        spike_image = pg.Surface((32, 32))  # Example surface for spike
-        spike_image.fill((0, 255, 0))  # Green spike
-        for _ in range(5):  # Create 5 spikes at random positions
+        # Sample code to create spikes.
+        spike_image.fill((GREEN))  # Green spike
+        for _ in range(10):  # Create 5 spikes at random positions
             spike = Spike(self, random.randint(0, 800), random.randint(0, 600))  # Implement the Spike class
             self.all_spikes.add(spike)
 
@@ -71,14 +70,20 @@ class Game:
             pg.display.flip()  # Refresh the display
             self.clock.tick(60)  # Limit frame rate to 60 FPS
 
-    def handle_events(self):
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.playing = False  # Exit the game if the window is closed
-
     def load_data(self):
         self.game_folder = path.dirname(__file__)
+        # with open(path.join(self.game_folder, HS_FILE), 'w') as f:
+        #     f.write(str(0))
+        '''try:
+            with open(path.join(self.game_folder, HS_FILE), 'r') as f:
+                self.highscore = int(f.read())
+        except:
+            self.highscore = 0
+            with open(path.join(self.game_folder, HS_FILE), 'w') as f:
+                f.write(str(self.highscore))'''
+            
         self.map = Map(path.join(self.game_folder, 'level1.txt'))  # Load the level data
+
 
     def new(self):
         self.load_data()
@@ -125,6 +130,9 @@ class Game:
         # Draw all sprites considering the camera offset
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y))
+        ''' self.draw_text(self.screen, str(pg.time.get_ticks()), 24, WHITE, WIDTH/30, HEIGHT/30)
+        self.draw_text(self.screen, "High Score: " + str(self.highscore), 24, BLACK, WIDTH/2, HEIGHT/24)
+        self.draw_text(self.screen, "Current Score: " + str(self.score), 24, BLACK, WIDTH/2, HEIGHT/24)'''
         pg.display.flip()  # Update the display
 
     def display_game_over(self):
