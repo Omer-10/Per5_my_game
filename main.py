@@ -54,6 +54,7 @@ class Game:
         self.game_over = False  # Track game over state
         self.camera_x = 0  # Initialize the camera offset
     
+    # chatgpt idea
     def load_spikes(self):
         # Sample code to create spikes.
         spike_image.fill((GREEN))  # Green spike
@@ -135,7 +136,8 @@ class Game:
         self.draw_text(self.screen, "Current Score: " + str(self.score), 24, BLACK, WIDTH/2, HEIGHT/24)'''
         pg.display.flip()  # Update the display
 
-    def display_game_over(self):
+    # chat gpt
+    def gameover(self):
         # Display game over screen
         font = pg.font.SysFont('Arial', 50)
         text = font.render('Game Over', True, RED)

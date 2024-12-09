@@ -30,7 +30,7 @@ class Player(Sprite):
         self.gravity = 0.5  # Gravity effect
 
     def update(self):
-        self.handle_input()  # Handle player input
+        self.handle_input()  # Handle player input/ chat gpt
         self.apply_gravity()  # Apply gravity
         self.rect.x += self.vx  # Move the player sideways
         # Handle wall collisions
