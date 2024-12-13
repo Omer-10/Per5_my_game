@@ -24,14 +24,14 @@ class Player(Sprite):
         self.rect.x = x
         self.rect.y = y
         # Movement properties
-        self.vx = 5  # Constant horizontal velocity
+        self.vx = 10  # Constant horizontal velocity
         self.vy = 0  # Vertical velocity
         self.jumping = False
-        self.gravity = 0.5  # Gravity effect
+        self.gravity = 1.3  # Gravity effect
 
     def update(self):
         self.handle_input()  # Handle player input/ chat gpt
-        self.apply_gravity()  # Apply gravity
+        self.use_gravity()  # Use gravity
         self.rect.x += self.vx  # Move the player sideways
         # Handle wall collisions
         self.collide_with_walls('x')
@@ -45,18 +45,13 @@ class Player(Sprite):
         if keys[pg.K_SPACE] and not self.jumping:
             self.jump()
 
-    def apply_gravity(self):
+    def use_gravity(self):
         if self.jumping:
             self.vy += self.gravity
             self.rect.y += self.vy
 
-            if self.rect.bottom >= pg.display.get_surface().get_height():  # Prevent falling through ground
-                self.rect.bottom = pg.display.get_surface().get_height()
-                self.jumping = False
-                self.vy = 0
-
     def jump(self):
-        self.vy = -10  # Upward velocity
+        self.vy = -13  # Upward velocity
         self.jumping = True
 
     def collide_with_walls(self, axis):

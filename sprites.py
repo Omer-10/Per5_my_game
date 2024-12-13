@@ -1,4 +1,4 @@
-# This file was created by: Chris Cozort
+# This file was created by: Omer Sultan
 
 import pygame as pg
 from pygame.sprite import Sprite
