@@ -27,11 +27,12 @@ class Player(Sprite):
         self.vx = 10  # Constant horizontal velocity
         self.vy = 0  # Vertical velocity
         self.jumping = False
-        self.gravity = 1.3  # Gravity effect
+        self.gravity = 1  # Gravity effect
+        self.coin_count = 0
 
     def update(self):
         self.handle_input()  # Handle player input/ chat gpt
-        self.use_gravity()  # Use gravity
+        self.apply_gravity()  # Apply gravity
         self.rect.x += self.vx  # Move the player sideways
         # Handle wall collisions
         self.collide_with_walls('x')
@@ -40,18 +41,27 @@ class Player(Sprite):
         # Handle vertical wall collisions
         self.collide_with_walls('y')
 
+    def collect_coins(self):
+        hits = pg.sprite.spritecollide(self, self.game.all_coins, True)  # Collect and remove coins
+        self.coin_count += len(hits)
+
     def handle_input(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_SPACE] and not self.jumping:
             self.jump()
 
-    def use_gravity(self):
+    def apply_gravity(self):
         if self.jumping:
             self.vy += self.gravity
             self.rect.y += self.vy
 
+            if self.rect.bottom >= pg.display.get_surface().get_height():  # Prevent falling through ground
+                self.rect.bottom = pg.display.get_surface().get_height()
+                self.jumping = False
+                self.vy = 0
+
     def jump(self):
-        self.vy = -13  # Upward velocity
+        self.vy = -10  # Upward velocity
         self.jumping = True
 
     def collide_with_walls(self, axis):
@@ -96,12 +106,11 @@ class Spike(Sprite):
 
 class Coin(Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.all_coins
-        Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GOLD)
+        self.groups = game.all_sprites, game.all_coins  # Assuming you have sprite groups set up
+        super().__init__(self.groups)
+        self.image = pg.Surface((TILESIZE, TILESIZE))  # Coin size
+        self.image.fill(GOLD)  # Color for the coin
         self.rect = self.image.get_rect()
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
-

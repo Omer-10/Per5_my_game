@@ -27,7 +27,6 @@ Alpha goal: to create a sidescroller setup, Spike collision, jump
 '''
 Sources:
 Spike - https://www.youtube.com/watch?v=atoGQ9o0ooI
-https://stackoverflow.com/questions/61412616/i-do-not-know-how-to-end-game-when-specific-block-is-touched-in-pygame 
 Side Scroller - https://bcpsj-my.sharepoint.com/personal/ccozort_bcp_org/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fccozort%5Fbcp%5Forg%2FDocuments%2FDocuments%2F000%5FCS%5Fprinciples%2F2024%5F2025%5FFall%2Fclass%5Fcode%2Fside%5Fscroller
 Collision Detection - https://www.geeksforgeeks.org/collision-detection-in-pygame/
 https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
@@ -50,11 +49,15 @@ class Game:
         pg.mixer.init()
         self.clock = pg.time.Clock()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        pg.display.set_caption("Omer's Coolest Game Ever...")
+        pg.display.set_caption("Geometry Dash")
         self.playing = True
-        self.game_over = False  # Track game over state
-        self.camera_x = 0  # Initialize the camera offset
-    
+        self.game_over = False  # Track game
+        self.camera_x = 0  #  camera offset
+        self.score = 0  # Initialize score (if needed)
+        self.all_sprites = pg.sprite.Group()
+        self.all_coins = pg.sprite.Group()
+ 
+
     def run(self):
         while self.playing:  # Main game loop
             self.handle_events()
@@ -87,74 +90,37 @@ class Game:
         self.all_coins = pg.sprite.Group()
 
         for row, tiles in enumerate(self.map.data):
-
             for col, tile in enumerate(tiles):
                 if tile == '1':  # Wall
                     Wall(self, col, row)
-
                 if tile == 'S':  # Spike
                     Spike(self, col, row)
-
                 if tile == 'C':  # Coin
                     Coin(self, col, row)
-
                 if tile == 'P':  # Player starting position
-                    self.player = Player(self, col, row)  
+                    self.player = Player(self, col, row)
 
     def run(self):
-        while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000  # Get the time
-            self.events()  # Handle events
-
-        if not self.game_over:
-            self.all_sprites.update()  # This should correctly call update on each sprite including the Player
-            self.draw()  # Draw the updated screen
-
-    pg.quit()  
-
-    def events(self):
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.playing = False
-    def run(self):
-
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
+            if not self.game_over:
+                self.update()
 
-        if not self.game_over:
-            self.update()
-
-        else:
-            self.display_game_over()  # May not be needed if quitting directly on spike hit
+            else:
+                self.display_game_over()  # Show game over screen
             self.draw()
-            pg.quit()  
+        pg.quit()
 
     def events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.playing = False
 
-# Chat gpt spike 
     def update(self):
-        self.get_keys()  # Handle player movement
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-
-        # Ensure the player stays within the screen bounds
-        if self.rect.x > WIDTH:
-            self.x = 0  # You may want to wrap the player back to the start
-
-        elif self.rect.x < 0:
-            self.x = WIDTH - TILESIZE  # Wrap to the other side if going off the left edge
-            self.rect.x = self.x
-            self.collide_with_walls('x')  # Handle wall collisions
-            self.rect.y = self.y
-            self.collide_with_walls('y')  # Handle vertical wall collisions
-    
-        # Check for collisions with coins and spikes
-        self.collide_with_stuff(self.game.all_coins, True) 
-        self.collide_with_stuff(self.game.all_spikes, False)
+        self.all_sprites.update()  # Update player and other sprites
+        # Update camera x based on player's position to ensure smooth scrolling
+        self.camera_x = self.player.rect.centerx - WIDTH // 2
 
     def draw(self):
         self.screen.fill(BLACK)  # Clear the screen
@@ -166,17 +132,26 @@ class Game:
         self.draw_text(self.screen, "Current Score: " + str(self.score), 24, BLACK, WIDTH/2, HEIGHT/24)'''
         pg.display.flip()  # Update the display
 
-# chat gpt: I asked for the spike to stop being weird by acting like a wall and told it to make it where ehn player touches the spike the game will end
-def collide_with_stuff(self, group, kill):
-    hits = pg.sprite.spritecollide(self, group, kill)
-    if hits:
-        if str(hits[0].__class__.__name__) == "Coin":
-            self.coin_count += 1  # Increment the coin count when collecting a coin
-            print("Collected a coin! Total coins:", self.coin_count)  
+        # chat gpt, to create a way to count the coins and gave main.py
+        self.draw_text(f'Coins: {self.player.coin_count}', 24, GOLD, WIDTH / 30, HEIGHT / 30)
+        pg.display.flip()
 
-        elif str(hits[0].__class__.__name__) == "Spike":
-            print("Game Over! You hit a spike!") 
-            pg.quit()  # Quit the game if the player hits a spike
+    # chat gpt, to create a way to count the coins and gave main.py
+    def draw_text(self, text, size, color, x, y):
+        font = pg.font.SysFont('Arial', size)
+        text_surface = font.render(text, True, color)
+        self.screen.blit(text_surface, (x, y))  # Draw text at specified location
+
+    # chat gpt
+    def gameover(self):
+        # Display game over screen
+        font = pg.font.SysFont('Arial', 50)
+        text = font.render('Game Over', True, RED)
+        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        self.screen.blit(text, text_rect)
+        pg.display.flip()
+        pg.time.wait(2000)  # Wait for 2 seconds before quitting
+        self.playing = False  # End the game
 
 if __name__ == "__main__":
     g = Game()

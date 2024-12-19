@@ -1,9 +1,10 @@
 # This file was created by: Omer Sultan
-
 import pygame as pg
 from pygame.sprite import Sprite
 from settings import *
 import random
+
+coinct = 0
 
 vec = pg.math.Vector2
 
@@ -23,10 +24,11 @@ class Player(Sprite):
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.speed = 20
-        self.vx, self.vy = 0, 0
-        self.coin_count = 0
+        self.coin_count = coinct
+
     def load_images(self):
         self.standing_image = self.spritesheet.get_image(0,0,32,32)
+
     def get_keys(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_w]:
@@ -42,6 +44,7 @@ class Player(Sprite):
             self.x = WIDTH/2
             self.y = HEIGHT/2
             print("respawn")
+
     def collide_with_walls(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.all_walls, False)
@@ -69,17 +72,20 @@ class Player(Sprite):
         #         print("not working...for hits")
         # # else:
         #     print("not working for dir check")
+
     def collide_with_stuff(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
+        global coinct
         if hits:
             if str(hits[0].__class__.__name__) == "Powerup":
                 self.speed += 20
                 # print("I've gotten a powerup!")
             if str(hits[0].__class__.__name__) == "Coin":
-                # print("I got a coin!!!")
+                print("I got a coin!!!")
                 self.coin_count += 1
-            if str(hits[0].__class__.__name__) == "Portal":
-                self.game.load_level("level2.txt")
+                coinct += 1
+            # if str(hits[0].__class__.__name__) == "Portal":
+            #     self.game.load_level("level2.txt")
 
     def update(self):
         self.get_keys()
@@ -96,6 +102,8 @@ class Player(Sprite):
 
         self.rect.y = self.y
         self.collide_with_walls('y')
+
+        self.collect_coins()
         
         # teleport the player to the other side of the screen
         self.collide_with_stuff(self.game.all_powerups, True)
