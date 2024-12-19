@@ -38,6 +38,8 @@ https://www.geeksforgeeks.org/creating-a-scrolling-background-in-pygame/
 https://www.tutorialspoint.com/pygame/pygame_using_camera_module.htm
 https://www.tutorialspoint.com/pygame/pygame_moving_image.htm
 
+Mr. Cozart vertical Side Scroller function where falling down ends game
+
 
 
 '''
@@ -142,16 +144,6 @@ class Game:
         text_surface = font.render(text, True, color)
         self.screen.blit(text_surface, (x, y))  # Draw text at specified location
 
-    # chat gpt
-    def gameover(self):
-        # Display game over screen
-        font = pg.font.SysFont('Arial', 50)
-        text = font.render('Game Over', True, RED)
-        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-        self.screen.blit(text, text_rect)
-        pg.display.flip()
-        pg.time.wait(2000)  # Wait for 2 seconds before quitting
-        self.playing = False  # End the game
 
 if __name__ == "__main__":
     g = Game()

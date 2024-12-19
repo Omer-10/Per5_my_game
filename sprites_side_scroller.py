@@ -41,6 +41,7 @@ class Player(Sprite):
         # Handle vertical wall collisions
         self.collide_with_walls('y')
 
+    #Chat gpt, gave this file and main and asked to fix bugs where the collection coin mechansim to work
     def collect_coins(self):
         hits = pg.sprite.spritecollide(self, self.game.all_coins, True)  # Collect and remove coins
         self.coin_count += len(hits)
@@ -50,6 +51,7 @@ class Player(Sprite):
         if keys[pg.K_SPACE] and not self.jumping:
             self.jump()
 
+    #chat gpt, gave this file and main and asked to fix bug where player should not fly
     def apply_gravity(self):
         if self.jumping:
             self.vy += self.gravity
@@ -91,6 +93,7 @@ class Wall(Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+        
 
 class Spike(Sprite):
     def __init__(self, game, x, y):
@@ -102,6 +105,7 @@ class Spike(Sprite):
         self.image.fill(GREEN)
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+        print("Spike work")
     
 
 class Coin(Sprite):
