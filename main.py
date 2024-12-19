@@ -11,6 +11,9 @@ from random import randint
 # we are editing this file after installing git
 
 '''
+Design Goals
+To add Spike and coin functionality, sidescroller, jump, consistent speed, end screen
+
 Elevator pitch: I want to create a game that replicates the original Game Geometry Dash
 
 GOALS: Sidescroller Parkour Game
